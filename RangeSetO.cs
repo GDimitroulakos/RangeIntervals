@@ -52,6 +52,13 @@ namespace RangeIntervals {
         }
     }
 
+    public enum RangeProximityToElement {
+        RP_NONE,
+        RP_LEFT,
+        RP_RIGHT,
+        RP_IN
+    }
+
     /// <summary>
     /// Represents a range interval as an immutable object. After the  object
     /// is created it cannot be changed. Any change in the min max fields results
@@ -91,6 +98,22 @@ namespace RangeIntervals {
                 return true;
             }
             return false;
+        }
+
+        public RangeProximityToElement IsNeighbor(T elem) {
+
+            if (elem.CompareTo(Prev(m_min)) == 0) {
+                return RangeProximityToElement.RP_LEFT;
+            }
+            else if (elem.CompareTo(Next(m_max)) == 0){
+                return RangeProximityToElement.RP_RIGHT;
+            }
+            else if ( IsInRange(elem) ) {
+                return RangeProximityToElement.RP_IN;
+            }
+            else {
+                return RangeProximityToElement.RP_NONE;
+            }
         }
 
         /// <summary>
@@ -192,6 +215,17 @@ namespace RangeIntervals {
     /// <seealso cref="System.Collections.Generic.IEnumerable{T}" />
     public class RangeSetO<T, Y> : IEnumerable<T> where T : Range<Y>, new() where Y : IComparable<Y> {
         private List<T> m_rangeList = new List<T>();
+
+        private bool m_discreteInterval;
+
+        public RangeSetO(bool discreteInterval) {
+            m_discreteInterval = discreteInterval;
+        }
+
+        public bool M_DiscreteInterval {
+            get => m_discreteInterval;
+        }
+
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
@@ -209,6 +243,22 @@ namespace RangeIntervals {
                 }
             }
             return false;
+        }
+
+        public void AddRange(Y unit) {
+            int m_count=1;
+            if (m_discreteInterval) {
+                while (m_count != 0) {
+                    foreach (T range in m_rangeList) {
+
+                    }
+                }
+            }
+            else {
+                AddRange(new T(){Min = unit, Max = unit});
+            }
+
+
         }
 
         public void AddRange(T rng) {

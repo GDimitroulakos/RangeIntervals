@@ -48,7 +48,7 @@ namespace RangeIntervals {
 
     class Program {
         static void Main(string[] args) {
-            RangeSetO<MyRange, int> set = new RangeSetO<MyRange, int>();
+            RangeSetO<MyRange, int> set = new RangeSetO<MyRange, int>(true);
             MyRange r2 = new MyRange(5, 6);
             MyRange r1 = new MyRange(6, 7);
             MyRange r3 = new MyRange(50, 60);
