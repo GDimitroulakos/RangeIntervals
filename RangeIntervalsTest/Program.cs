@@ -37,16 +37,18 @@ namespace RangeIntervalsTest {
 
     internal class Program {
         private static void Main(string[] args) {
-            RangeSetO<MyRange, int> set = new RangeSetO<MyRange, int>();
+            RangeSetO<MyRange, int> set = new RangeSetO<MyRange, int>(true);
             MyRange r2 = new MyRange(5, 6);
-            MyRange r1 = new MyRange(6, 7);
-            MyRange r3 = new MyRange(50, 60);
+            MyRange r1 = new MyRange(7, 8);
+            MyRange r3 = new MyRange(10, 12);
             r3.IsInRange(55);
             MyRange r4 = new MyRange(22, 28);
             MyRange r5 = new MyRange(1, 26);
             set.AddRange(r2);
             Console.WriteLine(set.ToString());
             set.AddRange(r1);
+            Console.WriteLine(set.ToString());
+            set.AddRange(9);
             Console.WriteLine(set.ToString());
             set.IsInSet(9);
             /*set.AddRange(r1);

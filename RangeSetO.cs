@@ -246,13 +246,33 @@ namespace RangeIntervals {
         }
 
         public void AddRange(Y unit) {
-            int m_count=1;
+            int count=1;
+            RangeProximityToElement prox;
             if (m_discreteInterval) {
-                while (m_count != 0) {
+                while (count != 0 && m_rangeList.Count != 0) {
                     foreach (T range in m_rangeList) {
-
+                        prox = range.IsNeighbor(unit);
+                        switch (prox) {
+                            case RangeProximityToElement.RP_LEFT:
+                                AddRange(new T() {Min = unit, Max = range.Min});
+                                count = 1;
+                                goto outfor;
+                                break;
+                            case RangeProximityToElement.RP_RIGHT:
+                                AddRange(new T() {Min = range.Max, Max = unit});
+                                count = 1;
+                                goto outfor;
+                                break;
+                            case RangeProximityToElement.RP_IN:
+                                return;
+                            default:
+                                count = 0;
+                                break;
+                        }
                     }
+                outfor: ;
                 }
+                AddRange(new T() { Min = unit, Max = unit });
             }
             else {
                 AddRange(new T(){Min = unit, Max = unit});
