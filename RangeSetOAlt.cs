@@ -25,7 +25,6 @@ namespace RangeIntervals {
         public RangeAlt() {
 
         }
-
         public RangeAlt(T min, T max) {
             m_min = min;
             m_max = max;
@@ -33,7 +32,6 @@ namespace RangeIntervals {
                 throw new ArgumentOutOfRangeException();
             }
         }
-
         public override string ToString() {
             return "Min : " + m_min.ToString() + " -  Max: " + m_max.ToString();
         }

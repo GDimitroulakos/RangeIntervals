@@ -8,11 +8,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace RangeIntervals {
+namespace RangeIntervals
+{
 
-    
+
 
     /// <summary>
     /// This class traverses the successive elements of a range of elements
@@ -20,7 +20,8 @@ namespace RangeIntervals {
     /// </summary>
     /// <typeparam name="T">Type of range element</typeparam>
     /// <seealso cref="System.Collections.Generic.IEnumerator{T}" />
-    public class RangeIterator<T> : IEnumerator<T> where T :  IComparable<T> {
+    public class RangeIterator<T> : IEnumerator<T> where T : IComparable<T>
+    {
         private Range<T> m_range;
         private T m_currentElement;
 
@@ -37,7 +38,7 @@ namespace RangeIntervals {
 
         public bool MoveNext() {
             m_currentElement = m_range.Next(m_currentElement);
-            if (m_currentElement.CompareTo(m_range.Max)>0 ) {
+            if (m_currentElement.CompareTo(m_range.Max) > 0) {
                 return false;
             }
             return true;
@@ -52,7 +53,8 @@ namespace RangeIntervals {
         }
     }
 
-    public enum RangeProximityToElement {
+    public enum RangeProximityToElement
+    {
         RP_NONE,
         RP_LEFT,
         RP_RIGHT,
@@ -65,7 +67,8 @@ namespace RangeIntervals {
     /// in a new object
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Range<T> : IEnumerable<T> where T : IComparable<T> {
+    public class Range<T> : IEnumerable<T> where T : IComparable<T>
+    {
         private T m_min = default(T);
         private T m_max = default(T);
 
@@ -105,10 +108,10 @@ namespace RangeIntervals {
             if (elem.CompareTo(Prev(m_min)) == 0) {
                 return RangeProximityToElement.RP_LEFT;
             }
-            else if (elem.CompareTo(Next(m_max)) == 0){
+            else if (elem.CompareTo(Next(m_max)) == 0) {
                 return RangeProximityToElement.RP_RIGHT;
             }
-            else if ( IsInRange(elem) ) {
+            else if (IsInRange(elem)) {
                 return RangeProximityToElement.RP_IN;
             }
             else {
@@ -154,7 +157,8 @@ namespace RangeIntervals {
     /// This class defines an iterator for the range set collection
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RangeSetIterator<T, Y> : IEnumerator<T> where T : Range<Y>, new() where Y : IComparable<Y> {
+    public class RangeSetIterator<T, Y> : IEnumerator<T> where T : Range<Y>, new() where Y : IComparable<Y>
+    {
         private List<T> m_collection;
         private int m_currentIndex;
         private T m_currentItem;
@@ -174,7 +178,8 @@ namespace RangeIntervals {
                 }
                 m_currentItem = m_collection[m_currentIndex];
                 return true;
-            } else {
+            }
+            else {
                 if (--m_currentIndex < 0) {
                     return false;
                 }
@@ -190,7 +195,8 @@ namespace RangeIntervals {
         public void Reset() {
             if (m_inReverse) {
                 m_currentIndex = m_collection.Count;
-            } else {
+            }
+            else {
                 m_currentIndex = -1;
             }
 
@@ -205,7 +211,7 @@ namespace RangeIntervals {
     /// <summary>
     /// The algorithm of RangeSet separates the whole space in alternate
     /// EMPTY and NON-EMPTY intervals. These intervals are indexed with even and
-    /// odd indices respectivelly. The algorithm to add a new range specifies
+    /// odd indices respectively. The algorithm to add a new range specifies
     /// in which intervals the range's minimum and maximum points lie. Then it
     /// determines how many existing ranges overlaps to delete them before
     /// inserting the new range
@@ -213,7 +219,8 @@ namespace RangeIntervals {
     /// <typeparam name="T">The type of interval</typeparam>
     /// <typeparam name="Y">The type of range elements</typeparam>
     /// <seealso cref="System.Collections.Generic.IEnumerable{T}" />
-    public class RangeSetO<T, Y> : IEnumerable<T> where T : Range<Y>, new() where Y : IComparable<Y> {
+    public class RangeSetO<T, Y> : IEnumerable<T> where T : Range<Y>, new() where Y : IComparable<Y>
+    {
         private List<T> m_rangeList = new List<T>();
 
         private bool m_discreteInterval;
@@ -245,8 +252,8 @@ namespace RangeIntervals {
             return false;
         }
 
-        public void AddRange(Y unit) {
-            int count=1;
+        /*public void AddRange(Y unit) {
+            int count = 1, added = 0;
             RangeProximityToElement prox;
             if (m_discreteInterval) {
                 while (count != 0 && m_rangeList.Count != 0) {
@@ -254,13 +261,15 @@ namespace RangeIntervals {
                         prox = range.IsNeighbor(unit);
                         switch (prox) {
                             case RangeProximityToElement.RP_LEFT:
-                                AddRange(new T() {Min = unit, Max = range.Min});
+                                AddRange(new T() { Min = unit, Max = range.Min });
                                 count = 1;
+                                added = 1;
                                 goto outfor;
                                 break;
                             case RangeProximityToElement.RP_RIGHT:
-                                AddRange(new T() {Min = range.Max, Max = unit});
+                                AddRange(new T() { Min = range.Max, Max = unit });
                                 count = 1;
+                                added = 1;
                                 goto outfor;
                                 break;
                             case RangeProximityToElement.RP_IN:
@@ -270,21 +279,32 @@ namespace RangeIntervals {
                                 break;
                         }
                     }
-                outfor: ;
+                outfor:;
                 }
-                AddRange(new T() { Min = unit, Max = unit });
+
+                if (added == 0) {
+                    AddRange(new T() { Min = unit, Max = unit });
+                }
             }
             else {
-                AddRange(new T(){Min = unit, Max = unit});
+                AddRange(new T() { Min = unit, Max = unit });
             }
 
 
+        }*/
+
+        public void AddRange(Y unit) {
+            AddRange(new T(){Min = unit,Max = unit});
         }
+
+        
 
         public void AddRange(T rng) {
 
             T newRange;
             Y minPoint, maxPoint;
+            bool minL=false, minR=false;
+            bool maxL = false, maxR = false;
 
             // Find the region in the range intervals where
             // the minimum point of rng lies. Produce the index
@@ -306,19 +326,43 @@ namespace RangeIntervals {
                 // lies in the current's range Min region and subsequently
                 // to the range's Max region
                 // Regions are numbered according to aforementioned discipline
-                if (rng.Min.CompareTo(range.Min) < 0) {
-                    indexS = r;
-                    break;
+                if (m_discreteInterval) {
+                    if (rng.Min.CompareTo(range.Prev(range.Min)) < 0) {
+                        indexS = r; //rng.Min resides on empty interval
+                        break;
+                    }
+
+                    if (rng.Min.CompareTo(range.Next(range.Max)) <= 0) {
+                        indexS = r + 1; //rng.Min resides on interval
+                        if (rng.Min.CompareTo(range.Prev(range.Min)) == 0) {
+                            minL = true; //rng.Min resides on interval marginally on the left
+                        }
+                        else if (rng.Min.CompareTo(range.Next(range.Max)) == 0) {
+                            minR = true; //rng.Min resides on interval marginally on the right
+                        }
+                        break;
+                    }
+
+                    if (range == m_rangeList.Last()) {
+                        indexS = r + 2;
+                    }
+                }
+                else {
+                    if (rng.Min.CompareTo(range.Min) < 0) {
+                        indexS = r;
+                        break;
+                    }
+
+                    if (rng.Min.CompareTo(range.Max) <= 0) {
+                        indexS = r + 1;
+                        break;
+                    }
+
+                    if (range == m_rangeList.Last()) {
+                        indexS = r + 2;
+                    }
                 }
 
-                if (rng.Min.CompareTo(range.Max) <= 0) {
-                    indexS = r + 1;
-                    break;
-                }
-
-                if (range == m_rangeList.Last()) {
-                    indexS = r + 2;
-                }
                 r = r + 2; // Every range in the existing collection covers to regions:
                            // 1) an empty region before the range having an odd index and
                            // 2) a subsequent non-empty region represented by the range itself having
@@ -332,19 +376,43 @@ namespace RangeIntervals {
                 // lies in the current's range Min region and subsequently
                 // to the range's Max region
                 // Regions are number according to aforementioned discipline
-                if (rng.Max.CompareTo(range.Min) < 0) {
-                    indexF = r;
-                    break;
+                if (m_discreteInterval) {
+                    if (rng.Max.CompareTo(range.Prev(range.Min)) < 0) {
+                        indexF = r; //rng.Max resides on empty interval
+                        break;
+                    }
+
+                    if (rng.Max.CompareTo(range.Next(range.Max)) <= 0) {
+                        indexF = r + 1; //rng.Max resides on interval
+                        if (rng.Max.CompareTo(range.Prev(range.Min)) == 0) {
+                            maxL = true; //rng.Max resides on interval marginally on the left
+                        }
+                        else if (rng.Max.CompareTo(range.Next(range.Max)) == 0) {
+                            maxR = true; //rng.Max resides on interval marginally on the right
+                        }
+                        break;
+                    }
+
+                    if (range == m_rangeList.Last()) {
+                        indexF = r + 2;
+                    }
+                }
+                else {
+                    if (rng.Max.CompareTo(range.Min) < 0) {
+                        indexF = r;
+                        break;
+                    }
+
+                    if (rng.Max.CompareTo(range.Max) <= 0) {
+                        indexF = r + 1;
+                        break;
+                    }
+
+                    if (range == m_rangeList.Last()) {
+                        indexF = r + 2;
+                    }
                 }
 
-                if (rng.Max.CompareTo(range.Max) <= 0) {
-                    indexF = r + 1;
-                    break;
-                }
-
-                if (range == m_rangeList.Last()) {
-                    indexF = r + 2;
-                }
                 r = r + 2; // Every range in the existing collection covers to regions:
                            // 1) an empty region before the range having an odd index and
                            // 2) a subsequent non-empty region represented by the range itself having
@@ -364,11 +432,43 @@ namespace RangeIntervals {
 
                     // Add the newrange in the appropriate position
                     m_rangeList.Insert(S, newRange);
-                } else {
-                    // The given range lies completely on and existing range.
-                    // Do nothing as there is an overlap
                 }
-            } else {
+                else {
+                    if (m_discreteInterval) {
+                        if (minL) {
+                            minPoint = rng.Min;
+                        }
+                        else {
+                            minPoint = m_rangeList[S].Min;
+                        }
+
+                        if (maxR) {
+                            maxPoint = rng.Max;
+                        }
+                        else {
+                            maxPoint = m_rangeList[F].Max;
+                        }
+
+                        // Even indexS represents a empty space
+                        // Create the new range
+                        newRange = new T() { Min = minPoint, Max = maxPoint };
+
+                        // Delete intervals crossing with the new interval
+                        for (int i = S; i <= F; i++) {
+                            m_rangeList.RemoveAt(S);
+                        }
+
+                        // Add the newrange in the appropriate position
+                        m_rangeList.Insert(S, newRange);
+                    }
+                    else {
+                        // The given range lies completely on and existing range.
+                        // Do nothing as there is an overlap
+                    }
+
+                }
+            }
+            else {
                 // At least one existing interval is crossed by the given range.
                 // A new range will have to be created and the existing overlaped
                 // intervals must be removed from the collection
@@ -378,9 +478,21 @@ namespace RangeIntervals {
                 if (indexS % 2 == 0) {
                     // rng minimum is the minimum of the new range interval
                     minPoint = rng.Min;
-                } else {
+                }
+                else {
                     // The overlaped's range minimum is the minimum of the new interval
-                    minPoint = m_rangeList[S].Min;
+                    if (m_discreteInterval) {
+                        if (minL) {
+                            minPoint = rng.Min;
+                        }
+
+                        else {
+                            minPoint = m_rangeList[S].Min;
+                        }
+                    }
+                    else {
+                        minPoint = m_rangeList[S].Min;
+                    }
                 }
 
                 // Check whether the maximum of the given range lies on EMPTY or
@@ -389,9 +501,21 @@ namespace RangeIntervals {
                     // rng maximum is on an empty space
                     // rng maximum is the maximum of the new range interval
                     maxPoint = rng.Max;
-                } else {
+                }
+                else {
                     // The overlaped's range maximum is the maximum of the new interval
-                    maxPoint = m_rangeList[F].Max;
+                    if (m_discreteInterval) {
+                        if (maxR) {
+                            maxPoint = rng.Max;
+                        }
+                        else {
+                            maxPoint = m_rangeList[F].Max;
+                        }
+                    }
+                    else {
+                        maxPoint = m_rangeList[F].Max;
+                    }
+                    
                 }
 
                 // Even indexS represents a empty space

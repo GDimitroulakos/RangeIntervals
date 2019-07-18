@@ -38,8 +38,12 @@ namespace RangeIntervalsTest {
     internal class Program {
         private static void Main(string[] args) {
             RangeSetO<MyRange, int> set = new RangeSetO<MyRange, int>(true);
+            for (int i = 0; i < 10; i++) {
+                set.AddRange(i);
+                Console.WriteLine(set.ToString());
+            }
             MyRange r2 = new MyRange(5, 6);
-            MyRange r1 = new MyRange(7, 8);
+            MyRange r1 = new MyRange(3, 4);
             MyRange r3 = new MyRange(10, 12);
             r3.IsInRange(55);
             MyRange r4 = new MyRange(22, 28);
