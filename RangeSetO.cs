@@ -51,15 +51,7 @@ namespace RangeIntervals
         object IEnumerator.Current {
             get { return Current; }
         }
-    }
-
-    public enum RangeProximityToElement
-    {
-        RP_NONE,
-        RP_LEFT,
-        RP_RIGHT,
-        RP_IN
-    }
+    }     
 
     /// <summary>
     /// Represents a range interval as an immutable object. After the  object
@@ -67,14 +59,11 @@ namespace RangeIntervals
     /// in a new object
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public class Range<T> : IEnumerable<T> where T : IComparable<T>
     {
         private T m_min = default(T);
         private T m_max = default(T);
-
-        public Range() {
-
-        }
 
         public IEnumerator<T> GetEnumerator() {
             return new RangeIterator<T>(this);
@@ -83,6 +72,11 @@ namespace RangeIntervals
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
+
+        public Range() {
+
+        }
+          
 
         public Range(T min, T max) {
             m_min = min;
@@ -102,22 +96,7 @@ namespace RangeIntervals
             }
             return false;
         }
-
-        public RangeProximityToElement IsNeighbor(T elem) {
-
-            if (elem.CompareTo(Prev(m_min)) == 0) {
-                return RangeProximityToElement.RP_LEFT;
-            }
-            else if (elem.CompareTo(Next(m_max)) == 0) {
-                return RangeProximityToElement.RP_RIGHT;
-            }
-            else if (IsInRange(elem)) {
-                return RangeProximityToElement.RP_IN;
-            }
-            else {
-                return RangeProximityToElement.RP_NONE;
-            }
-        }
+           
 
         /// <summary>
         /// Returns the next element of x  ( Mandatory for iterator )
@@ -219,6 +198,7 @@ namespace RangeIntervals
     /// <typeparam name="T">The type of interval</typeparam>
     /// <typeparam name="Y">The type of range elements</typeparam>
     /// <seealso cref="System.Collections.Generic.IEnumerable{T}" />
+    [Serializable]
     public class RangeSetO<T, Y> : IEnumerable<T> where T : Range<Y>, new() where Y : IComparable<Y>
     {
         private List<T> m_rangeList = new List<T>();
@@ -251,48 +231,7 @@ namespace RangeIntervals
             }
             return false;
         }
-
-        /*public void AddRange(Y unit) {
-            int count = 1, added = 0;
-            RangeProximityToElement prox;
-            if (m_discreteInterval) {
-                while (count != 0 && m_rangeList.Count != 0) {
-                    foreach (T range in m_rangeList) {
-                        prox = range.IsNeighbor(unit);
-                        switch (prox) {
-                            case RangeProximityToElement.RP_LEFT:
-                                AddRange(new T() { Min = unit, Max = range.Min });
-                                count = 1;
-                                added = 1;
-                                goto outfor;
-                                break;
-                            case RangeProximityToElement.RP_RIGHT:
-                                AddRange(new T() { Min = range.Max, Max = unit });
-                                count = 1;
-                                added = 1;
-                                goto outfor;
-                                break;
-                            case RangeProximityToElement.RP_IN:
-                                return;
-                            default:
-                                count = 0;
-                                break;
-                        }
-                    }
-                outfor:;
-                }
-
-                if (added == 0) {
-                    AddRange(new T() { Min = unit, Max = unit });
-                }
-            }
-            else {
-                AddRange(new T() { Min = unit, Max = unit });
-            }
-
-
-        }*/
-
+        
         public void AddRange(Y unit) {
             AddRange(new T(){Min = unit,Max = unit});
         }
