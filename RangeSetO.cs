@@ -76,6 +76,15 @@ namespace RangeIntervals
         public Range() {
 
         }
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="init"></param>
+        public Range(Range<T> init) {
+            m_min = init.Min;
+            m_max = init.Max;
+        }
           
 
         public Range(T min, T max) {
@@ -207,6 +216,12 @@ namespace RangeIntervals
 
         public RangeSetO(bool discreteInterval) {
             m_discreteInterval = discreteInterval;
+        }
+
+        // Copy constructor
+        public RangeSetO(RangeSetO<T, Y> init) {
+            m_discreteInterval = init.m_discreteInterval;
+            AddSet(init);
         }
 
         public bool M_DiscreteInterval {

@@ -72,6 +72,12 @@ namespace RangeIntervals {
         public RangeAlt() {
 
         }
+        // Copy constructor
+        public RangeAlt(RangeAlt<T> init) {
+            m_min = init.Min;
+            m_max = init.Max;
+        }
+
         public RangeAlt(T min, T max) {
             m_min = min;
             m_max = max;
@@ -201,6 +207,16 @@ namespace RangeIntervals {
         public RangeSetOAlt(RangeAltFactory<T, Y> factory, bool discreteInterval) {
             m_rangeFactory = factory;
             m_discreteInterval = discreteInterval;
+        }
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="init"></param>
+        public RangeSetOAlt(RangeSetOAlt<T,Y> init) {
+            m_rangeFactory = init.m_rangeFactory;
+            m_discreteInterval = init.m_discreteInterval;
+            AddSet(init);
         }
 
         public bool M_DiscreteInterval {
